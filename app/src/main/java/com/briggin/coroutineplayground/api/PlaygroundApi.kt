@@ -1,7 +1,7 @@
-package com.briggin.average.property.coroutineplayground.api
+package com.briggin.coroutineplayground.api
 
-import com.briggin.average.property.coroutineplayground.api.model.ApiModel
-import com.briggin.average.property.coroutineplayground.api.model.RequestBody
+import com.briggin.coroutineplayground.api.model.ApiModel
+import com.briggin.coroutineplayground.api.model.RequestBody
 import retrofit2.http.Body
 import retrofit2.http.POST
 

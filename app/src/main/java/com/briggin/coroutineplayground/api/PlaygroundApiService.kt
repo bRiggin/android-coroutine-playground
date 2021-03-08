@@ -1,6 +1,6 @@
-package com.briggin.average.property.coroutineplayground.api
+package com.briggin.coroutineplayground.api
 
-import com.briggin.average.property.coroutineplayground.api.model.*
+import com.briggin.coroutineplayground.api.model.*
 import java.lang.Exception
 
 private const val SEARCH_TERM_PLAYER = "alan"

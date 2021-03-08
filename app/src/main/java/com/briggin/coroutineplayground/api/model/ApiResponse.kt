@@ -1,4 +1,4 @@
-package com.briggin.average.property.coroutineplayground.api.model
+package com.briggin.coroutineplayground.api.model
 
 sealed class ApiResponse<T>
 

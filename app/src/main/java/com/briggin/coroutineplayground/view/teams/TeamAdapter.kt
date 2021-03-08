@@ -1,10 +1,10 @@
-package com.briggin.average.property.coroutineplayground.view.teams
+package com.briggin.coroutineplayground.view.teams
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.briggin.average.property.coroutineplayground.R
-import com.briggin.average.property.coroutineplayground.api.model.TeamModel
+import com.briggin.coroutineplayground.R
+import com.briggin.coroutineplayground.api.model.TeamModel
 
 class TeamAdapter: RecyclerView.Adapter<TeamViewHolder>() {
 

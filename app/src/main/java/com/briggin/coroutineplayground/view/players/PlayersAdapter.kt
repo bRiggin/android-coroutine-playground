@@ -1,10 +1,10 @@
-package com.briggin.average.property.coroutineplayground.view.players
+package com.briggin.coroutineplayground.view.players
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.briggin.average.property.coroutineplayground.R
-import com.briggin.average.property.coroutineplayground.api.model.PlayerModel
+import com.briggin.coroutineplayground.R
+import com.briggin.coroutineplayground.api.model.PlayerModel
 
 class PlayersAdapter: RecyclerView.Adapter<PlayerViewHolder>() {
 

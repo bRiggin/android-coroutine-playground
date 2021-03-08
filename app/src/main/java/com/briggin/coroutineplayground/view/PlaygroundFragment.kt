@@ -2,6 +2,7 @@ package com.briggin.coroutineplayground.view
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -36,6 +37,9 @@ class PlaygroundFragment : Fragment(R.layout.fragment_playground) {
         })
         viewModel.teams.observe(viewLifecycleOwner, {
             (teamsRecyclerView.adapter as? TeamAdapter)?.updateView(it)
+        })
+        viewModel.error.observe(viewLifecycleOwner, {
+            Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
         })
     }
 

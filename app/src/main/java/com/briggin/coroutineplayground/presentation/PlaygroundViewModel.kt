@@ -18,15 +18,18 @@ class PlaygroundViewModel(private val api: ApiService): ViewModel() {
     private val _teams: MutableLiveData<List<TeamModel>> = MutableLiveData()
     val teams: LiveData<List<TeamModel>> get() = _teams
 
+    private val _error: MutableLiveData<String> = MutableLiveData()
+    val error: LiveData<String> get() = _error
+
     suspend fun viewLoaded() {
         when(val response = api.getPlayers()) {
             is ApiSuccess -> _players.postValue(response.items)
-            is ApiError -> TODO()
+            is ApiError -> _error.postValue("Error occurred fetching players")
         }
 
         when(val response = api.getTeams()) {
             is ApiSuccess -> _teams.postValue(response.items)
-            is ApiError -> TODO()
+            is ApiError -> _error.postValue("Error occurred fetching teams")
         }
     }
 }

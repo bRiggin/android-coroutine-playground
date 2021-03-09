@@ -1,10 +1,10 @@
 package com.briggin.coroutineplayground.presentation
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.briggin.coroutineplayground.api.ApiService
-import com.briggin.coroutineplayground.api.PlaygroundApi
 import com.briggin.coroutineplayground.api.model.ApiError
 import com.briggin.coroutineplayground.api.model.ApiSuccess
 import com.briggin.coroutineplayground.api.model.PlayerModel
@@ -22,14 +22,30 @@ class PlaygroundViewModel(private val api: ApiService): ViewModel() {
     val error: LiveData<String> get() = _error
 
     suspend fun viewLoaded() {
+        val playerTriggerTimestamp = System.currentTimeMillis()
+        Log.wtf("TAG", "Performing players request")
         when(val response = api.getPlayers()) {
-            is ApiSuccess -> _players.postValue(response.items)
-            is ApiError -> _error.postValue("Error occurred fetching players")
+            is ApiSuccess -> {
+                Log.wtf("TAG", "Players received after: ${System.currentTimeMillis() - playerTriggerTimestamp}")
+                _players.postValue(response.items)
+            }
+            is ApiError -> {
+                Log.wtf("TAG", "Players error occurred after: ${System.currentTimeMillis() - playerTriggerTimestamp}")
+                _error.postValue("Error occurred fetching players")
+            }
         }
 
+        val teamsTriggerTimestamp = System.currentTimeMillis()
+        Log.wtf("TAG", "Performing teams request")
         when(val response = api.getTeams()) {
-            is ApiSuccess -> _teams.postValue(response.items)
-            is ApiError -> _error.postValue("Error occurred fetching teams")
+            is ApiSuccess -> {
+                Log.wtf("TAG", "Teams received after: ${System.currentTimeMillis() - teamsTriggerTimestamp}")
+                _teams.postValue(response.items)
+            }
+            is ApiError -> {
+                Log.wtf("TAG", "Teams error occurred after: ${System.currentTimeMillis() - teamsTriggerTimestamp}")
+                _error.postValue("Error occurred fetching teams")
+            }
         }
     }
 }

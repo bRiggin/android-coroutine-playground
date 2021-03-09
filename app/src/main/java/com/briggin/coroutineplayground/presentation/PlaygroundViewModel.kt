@@ -24,31 +24,27 @@ class PlaygroundViewModel(private val api: ApiService) : ViewModel() {
     fun viewLoaded() {
         val playerTriggerTimestamp = System.currentTimeMillis()
         Log.wtf("TAG", "Performing players request")
-        api.getPlayers() { response ->
-            when (response) {
-                is ApiSuccess -> {
-                    Log.wtf("TAG", "Players received after: ${System.currentTimeMillis() - playerTriggerTimestamp}")
-                    _players.postValue(response.items)
-                }
-                is ApiError -> {
-                    Log.wtf("TAG", "Players error occurred after: ${System.currentTimeMillis() - playerTriggerTimestamp}")
-                    _error.postValue("Error occurred fetching players")
-                }
+        when(val response = api.getPlayers()) {
+            is ApiSuccess -> {
+                Log.wtf("TAG", "Players received after: ${System.currentTimeMillis() - playerTriggerTimestamp}")
+                _players.postValue(response.items)
+            }
+            is ApiError -> {
+                Log.wtf("TAG", "Players error occurred after: ${System.currentTimeMillis() - playerTriggerTimestamp}")
+                _error.postValue("Error occurred fetching players")
             }
         }
 
         val teamsTriggerTimestamp = System.currentTimeMillis()
         Log.wtf("TAG", "Performing teams request")
-        api.getTeams() { response ->
-            when (response) {
-                is ApiSuccess -> {
-                    Log.wtf("TAG", "Teams received after: ${System.currentTimeMillis() - teamsTriggerTimestamp}")
-                    _teams.postValue(response.items)
-                }
-                is ApiError -> {
-                    Log.wtf("TAG", "Teams error occurred after: ${System.currentTimeMillis() - playerTriggerTimestamp}")
-                    _error.postValue("Error occurred fetching teams")
-                }
+        when(val response = api.getTeams()) {
+            is ApiSuccess -> {
+                Log.wtf("TAG", "Teams received after: ${System.currentTimeMillis() - teamsTriggerTimestamp}")
+                _teams.postValue(response.items)
+            }
+            is ApiError -> {
+                Log.wtf("TAG", "Teams error occurred after: ${System.currentTimeMillis() - playerTriggerTimestamp}")
+                _error.postValue("Error occurred fetching teams")
             }
         }
     }

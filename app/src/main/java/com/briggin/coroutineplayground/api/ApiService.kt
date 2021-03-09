@@ -5,6 +5,6 @@ import com.briggin.coroutineplayground.api.model.PlayerModel
 import com.briggin.coroutineplayground.api.model.TeamModel
 
 interface ApiService {
-    suspend fun getPlayers(): ApiResponse<PlayerModel>
-    suspend fun getTeams(): ApiResponse<TeamModel>
+    fun getPlayers(block: (ApiResponse<PlayerModel>) -> Unit)
+    fun getTeams(block: (ApiResponse<TeamModel>) -> Unit)
 }

@@ -46,7 +46,7 @@ class PlaygroundViewModel(private val api: ApiService) : ViewModel() {
                     _teams.postValue(response.items)
                 }
                 is ApiError -> {
-                    Log.wtf("TAG", "Teams error occurred after: ${System.currentTimeMillis() - playerTriggerTimestamp}")
+                    Log.wtf("TAG", "Teams error occurred after: ${System.currentTimeMillis() - teamsTriggerTimestamp}")
                     _error.postValue("Error occurred fetching teams")
                 }
             }

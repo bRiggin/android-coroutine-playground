@@ -28,7 +28,8 @@ class PlaygroundFragment : Fragment(R.layout.fragment_playground) {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
         initRecyclerViews()
-        GlobalScope.launch { viewModel.viewLoaded() }
+        GlobalScope.launch { viewModel.loadPlayers() }
+        GlobalScope.launch { viewModel.loadTeams() }
     }
 
     private fun initObservers() {

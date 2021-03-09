@@ -21,20 +21,28 @@ class PlaygroundViewModel(private val api: ApiService): ViewModel() {
     private val _error: MutableLiveData<String> = MutableLiveData()
     val error: LiveData<String> get() = _error
 
-    suspend fun viewLoaded() {
+    suspend fun loadPlayers() {
         val playerTriggerTimestamp = System.currentTimeMillis()
         Log.wtf("TAG", "Performing players request")
-        when(val response = api.getPlayers()) {
+        when (val response = api.getPlayers()) {
             is ApiSuccess -> {
-                Log.wtf("TAG", "Players received after: ${System.currentTimeMillis() - playerTriggerTimestamp}")
+                Log.wtf(
+                    "TAG",
+                    "Players received after: ${System.currentTimeMillis() - playerTriggerTimestamp}"
+                )
                 _players.postValue(response.items)
             }
             is ApiError -> {
-                Log.wtf("TAG", "Players error occurred after: ${System.currentTimeMillis() - playerTriggerTimestamp}")
+                Log.wtf(
+                    "TAG",
+                    "Players error occurred after: ${System.currentTimeMillis() - playerTriggerTimestamp}"
+                )
                 _error.postValue("Error occurred fetching players")
             }
         }
+    }
 
+    suspend fun loadTeams() {
         val teamsTriggerTimestamp = System.currentTimeMillis()
         Log.wtf("TAG", "Performing teams request")
         when(val response = api.getTeams()) {

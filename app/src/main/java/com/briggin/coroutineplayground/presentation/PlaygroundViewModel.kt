@@ -5,10 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.briggin.coroutineplayground.api.ApiService
-import com.briggin.coroutineplayground.api.model.ApiError
-import com.briggin.coroutineplayground.api.model.ApiSuccess
-import com.briggin.coroutineplayground.api.model.PlayerModel
-import com.briggin.coroutineplayground.api.model.TeamModel
+import com.briggin.coroutineplayground.api.model.*
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.awaitAll
 
 class PlaygroundViewModel(private val api: ApiService): ViewModel() {
 
@@ -24,10 +23,15 @@ class PlaygroundViewModel(private val api: ApiService): ViewModel() {
     suspend fun viewLoaded() {
         val playerTriggerTimestamp = System.currentTimeMillis()
         Log.wtf("TAG", "Performing players request")
-        when(val response = api.getPlayers()) {
+        val teamsTriggerTimestamp = System.currentTimeMillis()
+        Log.wtf("TAG", "Performing teams request")
+
+        val response = listOf(api.getPlayersAsync(), api.getTeamsAsync()).awaitAll()
+
+        when(val playerResponse = (response.first() as ApiResponse<PlayerModel>)) {
             is ApiSuccess -> {
                 Log.wtf("TAG", "Players received after: ${System.currentTimeMillis() - playerTriggerTimestamp}")
-                _players.postValue(response.items)
+                _players.postValue(playerResponse.items)
             }
             is ApiError -> {
                 Log.wtf("TAG", "Players error occurred after: ${System.currentTimeMillis() - playerTriggerTimestamp}")
@@ -35,17 +39,15 @@ class PlaygroundViewModel(private val api: ApiService): ViewModel() {
             }
         }
 
-        val teamsTriggerTimestamp = System.currentTimeMillis()
-        Log.wtf("TAG", "Performing teams request")
-        when(val response = api.getTeams()) {
+        when(val teamsResponse = (response.last() as ApiResponse<TeamModel>)) {
             is ApiSuccess -> {
                 Log.wtf("TAG", "Teams received after: ${System.currentTimeMillis() - teamsTriggerTimestamp}")
-                _teams.postValue(response.items)
+                _teams.postValue(teamsResponse.items)
             }
             is ApiError -> {
                 Log.wtf("TAG", "Teams error occurred after: ${System.currentTimeMillis() - teamsTriggerTimestamp}")
                 _error.postValue("Error occurred fetching teams")
             }
         }
-    }
+    
 }

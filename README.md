@@ -5,13 +5,19 @@ A collection of notes regarding Kotlin Coroutines and a simple sample project to
 A collection of definitions or conceptual descriptions to hopfully provide clarity and context for the objects and funcations available in Kotlin Coroutines
 
 #### Coroutines
-Not a strict definitions but can be thought as a lightweight thread. 
 
-Internally, Kotlin Coroutines use the concept of Continuation-Passing Style programming, also knownas CPS. This style of programming involves  passing the control flow of the program as an argument to functions. 
+*High Level:* Not a strict definition but can be thought of as a lightweight thread.
 
-This argument, in Kotlin Coroutines’ world, is known as Continuation. A continuation is nothing more than a callback. Although, it’s much more system-level than your standard callbacks. The system uses them to know when a suspended function should continue or return a value.
+*More Detail:*
 
-For example, when you call await(), the system suspends the outer coroutine until there is a value present. Once the value is there, it uses the continuation, to return it back to the outer coroutine. This way, it doesn’t have to block threads, it can just notify itself that a coroutine needs a thread to continue its work. Really neat, huh? :]
+* Conceptually a coroutine can be thought of as a thread. _“I can run this piece of code on another thread”_ can simply be changed to _“I can run this piece of code on another coroutine”_.
+    * This being said, coroutines are very computationally inexpensive compared with threads and therefore creating new coroutines is something we can do freely without having to consider the repercussions. Plus this allows us to use the “suspendable” capability of a coroutine.
+* Coroutines use a concept called Continuation-Passing Style programming or CPS. Put simply, CPS involves passing the control flow of the code as an input argument to its functions and it is this mechanism that allows a coroutine to “suspend”.
+    * For Kotlin coroutines are known as continuations but functionally can just be thought of as callbacks. 
+* When we start a new coroutine, that coroutine is usually responsible for performing a specific task or loading some data. When, for example, that coroutine is waiting for a network request to return it becomes “suspended” and releases the underlying thread. When that result is returned, the computation is resumed and the coroutine is no longer “suspended”.
+* Note that “suspendable computation” == “coroutine”
+* Coroutines run “on top” of threads and as we know can be suspended. When a coroutine is suspended, the task or computation associated with it is paused, removed from that thread and stored in memory. The underlying thread is now free for other computations. 
+* When it’s ready, the computation can continue and is returned to a thread, but not necessarily the same one.
 
 #### CoroutineScope
 * An object the defines the breadth or capacitity that the coroutines defind under this "scope" can operate within.

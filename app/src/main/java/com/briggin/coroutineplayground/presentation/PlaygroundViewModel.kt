@@ -9,6 +9,8 @@ import com.briggin.coroutineplayground.api.model.ApiError
 import com.briggin.coroutineplayground.api.model.ApiSuccess
 import com.briggin.coroutineplayground.api.model.PlayerModel
 import com.briggin.coroutineplayground.api.model.TeamModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 
 class PlaygroundViewModel(private val api: ApiService): ViewModel() {
 
@@ -21,31 +23,38 @@ class PlaygroundViewModel(private val api: ApiService): ViewModel() {
     private val _error: MutableLiveData<String> = MutableLiveData()
     val error: LiveData<String> get() = _error
 
-    suspend fun viewLoaded() {
+    suspend fun viewLoaded() = coroutineScope {
         val playerTriggerTimestamp = System.currentTimeMillis()
-        Log.wtf("TAG", "Performing players request")
-        when(val response = api.getPlayers()) {
-            is ApiSuccess -> {
-                Log.wtf("TAG", "Players received after: ${System.currentTimeMillis() - playerTriggerTimestamp}")
-                _players.postValue(response.items)
+        val teamsTriggerTimestamp = System.currentTimeMillis()
+        val playerCall = async {
+            when(val response = api.getPlayers()) {
+                is ApiSuccess -> {
+                    Log.wtf("TAG", "Players received after: ${System.currentTimeMillis() - playerTriggerTimestamp}")
+                    _players.postValue(response.items)
+                }
+                is ApiError -> {
+                    Log.wtf("TAG", "Players error occurred after: ${System.currentTimeMillis() - playerTriggerTimestamp}")
+                    _error.postValue("Error occurred fetching players")
+                }
             }
-            is ApiError -> {
-                Log.wtf("TAG", "Players error occurred after: ${System.currentTimeMillis() - playerTriggerTimestamp}")
-                _error.postValue("Error occurred fetching players")
+        }
+        val teamsCall = async {
+            when(val response = api.getTeams()) {
+                is ApiSuccess -> {
+                    Log.wtf("TAG", "Teams received after: ${System.currentTimeMillis() - teamsTriggerTimestamp}")
+                    _teams.postValue(response.items)
+                }
+                is ApiError -> {
+                    Log.wtf("TAG", "Teams error occurred after: ${System.currentTimeMillis() - teamsTriggerTimestamp}")
+                    _error.postValue("Error occurred fetching teams")
+                }
             }
         }
 
-        val teamsTriggerTimestamp = System.currentTimeMillis()
+        Log.wtf("TAG", "Performing players request")
+        playerCall.await()
+
         Log.wtf("TAG", "Performing teams request")
-        when(val response = api.getTeams()) {
-            is ApiSuccess -> {
-                Log.wtf("TAG", "Teams received after: ${System.currentTimeMillis() - teamsTriggerTimestamp}")
-                _teams.postValue(response.items)
-            }
-            is ApiError -> {
-                Log.wtf("TAG", "Teams error occurred after: ${System.currentTimeMillis() - teamsTriggerTimestamp}")
-                _error.postValue("Error occurred fetching teams")
-            }
-        }
+        teamsCall.await()
     }
 }
